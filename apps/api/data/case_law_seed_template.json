@@ -1,0 +1,33 @@
+[
+  {
+    "case_name": "Sample Case v Sample State",
+    "citation": "[2020] Sample Citation",
+    "court": "Supreme Court of Nigeria",
+    "court_level": "supreme",
+    "year": 2020,
+    "subject_area": "criminal law",
+    "summary": "Sample case on confession and conviction.",
+    "chunks": [
+      {
+        "chunk_type": "facts",
+        "heading": "Facts",
+        "text": "The accused was charged with an offence and made a confessional statement."
+      },
+      {
+        "chunk_type": "issue",
+        "heading": "Issue",
+        "text": "Whether a confession alone can sustain conviction."
+      },
+      {
+        "chunk_type": "holding",
+        "heading": "Holding",
+        "text": "A voluntary confession may sustain conviction if the court accepts it as true."
+      },
+      {
+        "chunk_type": "ratio",
+        "heading": "Ratio",
+        "text": "A confession that is direct, positive and unequivocal may ground conviction."
+      }
+    ]
+  }
+]

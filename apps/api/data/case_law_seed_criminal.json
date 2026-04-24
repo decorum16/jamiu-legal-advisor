@@ -1,0 +1,132 @@
+[
+  {
+    "case_name": "R v. Sykes",
+    "citation": "[1913] 8 Cr App R 233",
+    "court": "English Court of Criminal Appeal",
+    "court_level": "appeal",
+    "year": 1913,
+    "subject_area": "criminal law",
+    "summary": "Authority on tests for evaluating confessional statements.",
+    "chunks": [
+      {
+        "chunk_type": "issue",
+        "heading": "Issue",
+        "text": "How should a court evaluate the truth of a confession?"
+      },
+      {
+        "chunk_type": "holding",
+        "heading": "Holding",
+        "text": "A confession can ground conviction if the court is satisfied it is true."
+      },
+      {
+        "chunk_type": "ratio",
+        "heading": "Ratio",
+        "text": "Courts should test a confession by examining whether it is direct, positive, and whether there are circumstances that make it probable or improbable."
+      }
+    ]
+  },
+  {
+    "case_name": "Kanu v. The King",
+    "citation": "(1952) 14 WACA 30",
+    "court": "West African Court of Appeal",
+    "court_level": "appeal",
+    "year": 1952,
+    "subject_area": "criminal law",
+    "summary": "Authority on whether confession alone can sustain conviction.",
+    "chunks": [
+      {
+        "chunk_type": "issue",
+        "heading": "Issue",
+        "text": "Whether a confession alone is sufficient to sustain a conviction."
+      },
+      {
+        "chunk_type": "holding",
+        "heading": "Holding",
+        "text": "A free and voluntary confession alone may be sufficient to sustain a conviction."
+      },
+      {
+        "chunk_type": "ratio",
+        "heading": "Ratio",
+        "text": "A confession that is direct, positive and unequivocal, and accepted by the court as true, can ground a conviction without corroboration."
+      }
+    ]
+  },
+  {
+    "case_name": "Nwachukwu v. The State",
+    "citation": "(2007) 17 NWLR (Pt. 1062) 31",
+    "court": "Supreme Court of Nigeria",
+    "court_level": "supreme",
+    "year": 2007,
+    "subject_area": "criminal law",
+    "summary": "Authority on retracted confessions and their evidential value.",
+    "chunks": [
+      {
+        "chunk_type": "issue",
+        "heading": "Issue",
+        "text": "Whether a retracted confession can still be relied upon."
+      },
+      {
+        "chunk_type": "holding",
+        "heading": "Holding",
+        "text": "A retracted confession may still ground conviction if the court is satisfied of its truth."
+      },
+      {
+        "chunk_type": "ratio",
+        "heading": "Ratio",
+        "text": "The court must test the truth of a retracted confession by examining surrounding circumstances and evidence before relying on it."
+      }
+    ]
+  },
+  {
+    "case_name": "Fawehinmi v. Abacha",
+    "citation": "(2000) 6 NWLR (Pt. 660) 228",
+    "court": "Supreme Court of Nigeria",
+    "court_level": "supreme",
+    "year": 2000,
+    "subject_area": "constitutional law",
+    "summary": "Authority on personal liberty and unlawful detention.",
+    "chunks": [
+      {
+        "chunk_type": "issue",
+        "heading": "Issue",
+        "text": "Whether detention without lawful justification violates constitutional rights."
+      },
+      {
+        "chunk_type": "holding",
+        "heading": "Holding",
+        "text": "Unlawful detention constitutes a violation of the right to personal liberty."
+      },
+      {
+        "chunk_type": "ratio",
+        "heading": "Ratio",
+        "text": "Any detention not in accordance with procedure permitted by law violates Section 35 of the Constitution and entitles the victim to redress."
+      }
+    ]
+  },
+  {
+    "case_name": "Dokubo-Asari v. FRN",
+    "citation": "(2007) 12 NWLR (Pt. 1048) 320",
+    "court": "Supreme Court of Nigeria",
+    "court_level": "supreme",
+    "year": 2007,
+    "subject_area": "criminal law",
+    "summary": "Authority on bail discretion and national security considerations.",
+    "chunks": [
+      {
+        "chunk_type": "issue",
+        "heading": "Issue",
+        "text": "Whether bail can be denied in the interest of national security."
+      },
+      {
+        "chunk_type": "holding",
+        "heading": "Holding",
+        "text": "The court may deny bail where national security is threatened."
+      },
+      {
+        "chunk_type": "ratio",
+        "heading": "Ratio",
+        "text": "Where the interest of national security outweighs individual liberty, the court may refuse bail in the interest of justice."
+      }
+    ]
+  }
+]

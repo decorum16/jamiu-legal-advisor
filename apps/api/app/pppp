@@ -1,0 +1,19 @@
+from app.services.legal.answer_pipeline import LegalAnswerPipeline
+from app.services.retrievers.case_retriever import CaseRetriever
+from app.services.retrievers.constitution_retriever import ConstitutionRetriever
+from app.services.retrievers.statute_retriever import StatuteRetriever
+from app.services.llm.client import LLMClient
+
+
+def get_legal_answer_pipeline() -> LegalAnswerPipeline:
+    statute_retriever = StatuteRetriever()
+    constitution_retriever = ConstitutionRetriever()
+    case_retriever = CaseRetriever()
+    llm_client = LLMClient()
+
+    return LegalAnswerPipeline(
+        statute_retriever=statute_retriever,
+        constitution_retriever=constitution_retriever,
+        case_retriever=case_retriever,
+        llm_client=llm_client,
+    )

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jamiu Legal Advisor</title>
+</head>
+<body style="font-family: Arial; max-width: 700px; margin: 40px auto;">
+
+    <h2>Jamiu Legal Advisor</h2>
+
+    <textarea id="question" rows="4" style="width:100%;" placeholder="Ask a legal question..."></textarea>
+    <br><br>
+    <button onclick="ask()">Ask</button>
+
+    <pre id="result" style="background:#f4f4f4; padding:15px; margin-top:20px;"></pre>
+
+    <script>
+        async function ask() {
+            const question = document.getElementById("question").value;
+
+            const res = await fetch("http://127.0.0.1:8000/api/v1/answer", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ question, limit: 5 })
+            });
+
+            const data = await res.json();
+
+            document.getElementById("result").textContent =
+                "Answer:\n\n" +
+                data.short_answer + "\n\n" +
+                "Authority:\n" + data.leading_authority + "\n\n" +
+                "Rule:\n" + data.rule_explanation + "\n\n" +
+                "Conclusion:\n" + data.conclusion;
+        }
+    </script>
+
+</body>
+</html>

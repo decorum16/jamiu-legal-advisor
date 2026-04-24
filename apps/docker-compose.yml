@@ -1,0 +1,16 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: jamiu-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: jamiu
+      POSTGRES_PASSWORD: jamiu123
+      POSTGRES_DB: jamiu
+    ports:
+      - "5433:5432"
+    volumes:
+      - jamiu_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  jamiu_postgres_data:
