@@ -12,8 +12,8 @@ class LegalSource(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     title: Mapped[str] = mapped_column(String(500), nullable=False, index=True)
+    jurisdiction: Mapped[str] = mapped_column(String(100), nullable=False, default="Nigeria")
     country: Mapped[str] = mapped_column(String(100), nullable=False, default="Nigeria")
-    jurisdiction_level: Mapped[str] = mapped_column(String(50), nullable=False, default="federal")
     state_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
     source_type: Mapped[str] = mapped_column(String(100), nullable=False)
     practice_area: Mapped[str | None] = mapped_column(String(100), nullable=True)
