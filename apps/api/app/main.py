@@ -4,6 +4,17 @@ from app.api.routes.ask import router as ask_router
 from app.api.routes.legal_search import router as legal_search_router
 from app.api.routes.legal_answer import router as legal_answer_router
 
+from app.core.database import engine, Base
+
+app = FastAPI()
+
+# 🔥 THIS LINE FIXES YOUR ERROR
+Base.metadata.create_all(bind=engine)
+
+@app.get("/")
+def root():
+    return {"name": "Jamiu Legal Advisor Nigeria"}
+
 app = FastAPI(
     title="Jamiu Legal Advisor",
     version="1.0.0",

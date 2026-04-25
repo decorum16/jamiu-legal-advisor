@@ -1,4 +1,7 @@
+import os
 from openai import OpenAI
+
+client = OpenAI(api_key=os.getenv("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"))
 
 from app.core.config import get_settings
 
