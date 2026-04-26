@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from sqlalchemy import Text
 
 from app.api.routes.ask import router as ask_router
 from app.api.routes.legal_search import router as legal_search_router
@@ -9,7 +10,13 @@ from app.core.database import engine, Base
 app = FastAPI()
 
 # 🔥 THIS LINE FIXES YOUR ERROR
+
+from app.core.database import Base, engine
+
 Base.metadata.create_all(bind=engine)
+
+
+
 
 @app.get("/")
 def root():
