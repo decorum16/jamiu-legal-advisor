@@ -69,7 +69,7 @@ def search(
                     LegalChunk.side_note.ilike(f"%{normalized_query}%"),
                     LegalChunk.part_label.ilike(f"%{normalized_query}%"),
                     LegalChunk.text.ilike(f"%{normalized_query}%"),
-                    LegalSource.title.ilike(f"%{normalized_query}%"),
+                    LegalChunk.citation.ilike(f"%{normalized_query}%"),
                 )
             )
             .order_by(LegalChunk.id.asc())
@@ -87,7 +87,7 @@ def search(
                         LegalChunk.side_note.ilike(f"%{tok}%"),
                         LegalChunk.part_label.ilike(f"%{tok}%"),
                         LegalChunk.text.ilike(f"%{tok}%"),
-                        LegalSource.title.ilike(f"%{tok}%"),
+                        LegalChunk.citation.ilike(f"%{tok}%"),
                     )
                 )
 

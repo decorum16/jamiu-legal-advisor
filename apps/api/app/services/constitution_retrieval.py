@@ -62,8 +62,8 @@ def retrieve_constitution_chunks(
         .join(LegalSource, LegalChunk.source_id == LegalSource.id)
         .filter(
             or_(
-                LegalSource.title.ilike("%constitution%"),
-                LegalSource.title.ilike("%cfrn%"),
+                LegalChunk.citation.ilike("%constitution%"),
+                LegalChunk.citation.ilike("%cfrn%"),
             )
         )
     )
@@ -75,7 +75,7 @@ def retrieve_constitution_chunks(
                 LegalChunk.side_note.ilike(f"%{tok}%"),
                 LegalChunk.part_label.ilike(f"%{tok}%"),
                 LegalChunk.text.ilike(f"%{tok}%"),
-                LegalSource.title.ilike(f"%{tok}%"),
+                LegalChunk.citation.ilike(f"%{tok}%"),
             )
         )
 

@@ -13,7 +13,7 @@ def expand_tokens(question: str) -> list[str]:
     expanded = set(tok for tok in q.replace("?", " ").split() if len(tok) > 2)
 
     if "confession" in q:
-        expanded.update(["confession", "confessional", "section 28", "section 29"])
+        expanded.update(["confession", "confessional", "section", "28", "29"])
 
     if "bail" in q:
         expanded.add("bail")
@@ -28,10 +28,10 @@ def expand_tokens(question: str) -> list[str]:
         expanded.add("statement")
 
     if "evidence act" in q:
-        expanded.update(["evidence", "evidence act"])
+        expanded.update(["evidence", "act"])
 
     if "police act" in q:
-        expanded.update(["police", "police act"])
+        expanded.update(["police", "act"])
 
     if "acja" in q or "criminal justice" in q:
         expanded.update(["acja", "administration", "criminal", "justice"])
@@ -40,17 +40,15 @@ def expand_tokens(question: str) -> list[str]:
 
 
 def guess_source_title(chunk: LegalChunk) -> str:
-    citation = (chunk.citation or "").lower()
     text = (chunk.text or "").lower()
-    combined = f"{citation} {text}"
 
-    if "evidence act" in combined or "confession" in combined:
+    if "evidence act" in text or "confession" in text:
         return "Evidence Act"
 
-    if "administration of criminal justice" in combined or "acja" in combined:
+    if "administration of criminal justice" in text or "acja" in text:
         return "Administration of Criminal Justice Act"
 
-    if "police act" in combined or "police" in combined:
+    if "police act" in text or "police" in text:
         return "Police Act"
 
     return "Statute"
@@ -59,15 +57,11 @@ def guess_source_title(chunk: LegalChunk) -> str:
 def row_to_result(chunk: LegalChunk) -> dict[str, Any]:
     source_title = guess_source_title(chunk)
 
-    citation = chunk.citation or source_title
-    if getattr(chunk, "section_number", None):
-        citation = f"{source_title}, Section {chunk.section_number}"
-
     return {
         "source_title": source_title,
-        "section_number": str(getattr(chunk, "section_number", "") or ""),
-        "part_label": getattr(chunk, "part_label", None),
-        "citation": citation,
+        "section_number": "",
+        "part_label": "",
+        "citation": source_title,
         "text": chunk.text or "",
         "score": 0.90,
     }
@@ -98,14 +92,7 @@ def retrieve_statute_chunks(
 
     for tok in tokens:
         like = f"%{tok}%"
-        token_conditions.append(
-            or_(
-                LegalChunk.side_note.ilike(like),
-                LegalChunk.part_label.ilike(like),
-                LegalChunk.text.ilike(like),
-                LegalChunk.citation.ilike(like),
-            )
-        )
+        token_conditions.append(LegalChunk.text.ilike(like))
 
     query = db.query(LegalChunk)
 
@@ -114,37 +101,25 @@ def retrieve_statute_chunks(
     else:
         rows = query.limit(limit).all()
 
-    def relevance_score(chunk: LegalChunk) -> tuple[int, int]:
+    def relevance_score(chunk: LegalChunk) -> int:
         text = (chunk.text or "").lower()
-        side_note = (getattr(chunk, "side_note", None) or "").lower()
-        part_label = (getattr(chunk, "part_label", None) or "").lower()
-        citation = (chunk.citation or "").lower()
         source_title = guess_source_title(chunk).lower()
-        section_number = str(getattr(chunk, "section_number", "") or "").strip()
 
         score = statute_source_boost(source_title)
 
         for tok in tokens:
             if tok in text:
-                score += 4
-            if tok in side_note:
-                score += 6
-            if tok in part_label:
                 score += 5
-            if tok in citation:
-                score += 8
-            if tok in source_title:
-                score += 8
 
         if "confession" in q:
             if "evidence act" in source_title:
                 score += 40
-            if section_number == "28":
+            if "section 28" in text or "28." in text:
                 score += 30
-            if section_number == "29":
+            if "section 29" in text or "29." in text:
                 score += 20
-            if "confession" in text or "confession" in side_note:
-                score += 20
+            if "confession" in text or "confessional" in text:
+                score += 25
 
         if "bail" in q and (
             "acja" in source_title or "criminal justice" in source_title
@@ -154,12 +129,7 @@ def retrieve_statute_chunks(
         if "police" in q and "police act" in source_title:
             score += 20
 
-        try:
-            section_num = int(section_number)
-        except Exception:
-            section_num = 99999
-
-        return (score, -section_num)
+        return score
 
     ranked = sorted(rows, key=relevance_score, reverse=True)[:limit]
     return [row_to_result(chunk) for chunk in ranked]
