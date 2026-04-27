@@ -16,7 +16,7 @@ SOURCE_TITLE = "Constitution of the Federal Republic of Nigeria 1999"
 
 
 def get_or_create_source(db):
-    source = db.query(LegalSource).filter(LegalSource.title == SOURCE_TITLE).first()
+    source = db.query(LegalSource).filter(LegalChunk.citation== SOURCE_TITLE).first()
     if source:
         return source
 

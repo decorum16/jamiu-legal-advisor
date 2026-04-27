@@ -5,7 +5,7 @@ from typing import Any
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
-from app.models.legal import LegalChunk, LegalSource
+from app.models.legal import LegalChunk
 
 
 def expand_tokens(question: str) -> list[str]:
@@ -16,38 +16,57 @@ def expand_tokens(question: str) -> list[str]:
         expanded.update(["confession", "confessional", "section 28", "section 29"])
 
     if "bail" in q:
-        expanded.update(["bail"])
+        expanded.add("bail")
 
     if "remand" in q:
-        expanded.update(["remand"])
+        expanded.add("remand")
 
     if "arrest" in q:
-        expanded.update(["arrest"])
+        expanded.add("arrest")
 
     if "statement" in q:
-        expanded.update(["statement"])
+        expanded.add("statement")
 
     if "evidence act" in q:
-        expanded.update(["evidence act"])
+        expanded.update(["evidence", "evidence act"])
 
     if "police act" in q:
-        expanded.update(["police act"])
+        expanded.update(["police", "police act"])
 
     if "acja" in q or "criminal justice" in q:
-        expanded.update(["acja", "administration of criminal justice"])
+        expanded.update(["acja", "administration", "criminal", "justice"])
 
     return sorted(expanded)
 
 
-def row_to_result(chunk: LegalChunk, source: LegalSource) -> dict[str, Any]:
-    citation = source.title or "Statute"
-    if chunk.section_number:
-        citation = f"{citation}, Section {chunk.section_number}"
+def guess_source_title(chunk: LegalChunk) -> str:
+    citation = (chunk.citation or "").lower()
+    text = (chunk.text or "").lower()
+    combined = f"{citation} {text}"
+
+    if "evidence act" in combined or "confession" in combined:
+        return "Evidence Act"
+
+    if "administration of criminal justice" in combined or "acja" in combined:
+        return "Administration of Criminal Justice Act"
+
+    if "police act" in combined or "police" in combined:
+        return "Police Act"
+
+    return "Statute"
+
+
+def row_to_result(chunk: LegalChunk) -> dict[str, Any]:
+    source_title = guess_source_title(chunk)
+
+    citation = chunk.citation or source_title
+    if getattr(chunk, "section_number", None):
+        citation = f"{source_title}, Section {chunk.section_number}"
 
     return {
-        "source_title": source.title or "Statute",
-        "section_number": str(chunk.section_number or ""),
-        "part_label": chunk.part_label,
+        "source_title": source_title,
+        "section_number": str(getattr(chunk, "section_number", "") or ""),
+        "part_label": getattr(chunk, "part_label", None),
         "citation": citation,
         "text": chunk.text or "",
         "score": 0.90,
@@ -63,6 +82,7 @@ def statute_source_boost(source_title: str) -> int:
         return 95
     if "police act" in title:
         return 90
+
     return 50
 
 
@@ -74,48 +94,45 @@ def retrieve_statute_chunks(
     tokens = expand_tokens(question)
     q = question.lower()
 
-    base_query = (
-        db.query(LegalChunk, LegalSource)
-        .join(LegalSource, LegalChunk.source_id == LegalSource.id)
-        .filter(
-            or_(
-                LegalSource.title.ilike("%act%"),
-                LegalSource.title.ilike("%acja%"),
-                LegalSource.title.ilike("%evidence%"),
-                LegalSource.title.ilike("%police%"),
-            )
-        )
-    )
-
     token_conditions = []
+
     for tok in tokens:
+        like = f"%{tok}%"
         token_conditions.append(
             or_(
-                LegalChunk.side_note.ilike(f"%{tok}%"),
-                LegalChunk.part_label.ilike(f"%{tok}%"),
-                LegalChunk.text.ilike(f"%{tok}%"),
-                LegalSource.title.ilike(f"%{tok}%"),
+                LegalChunk.side_note.ilike(like),
+                LegalChunk.part_label.ilike(like),
+                LegalChunk.text.ilike(like),
+                LegalChunk.citation.ilike(like),
             )
         )
 
-    rows: list[tuple[LegalChunk, LegalSource]] = []
+    query = db.query(LegalChunk)
+
     if token_conditions:
-        rows = base_query.filter(or_(*token_conditions)).all()
+        rows = query.filter(or_(*token_conditions)).all()
+    else:
+        rows = query.limit(limit).all()
 
-    def relevance_score(item: tuple[LegalChunk, LegalSource]) -> tuple[int, int]:
-        chunk, source = item
+    def relevance_score(chunk: LegalChunk) -> tuple[int, int]:
         text = (chunk.text or "").lower()
-        side_note = (chunk.side_note or "").lower()
-        source_title = (source.title or "").lower()
-        section_number = str(chunk.section_number or "").strip()
+        side_note = (getattr(chunk, "side_note", None) or "").lower()
+        part_label = (getattr(chunk, "part_label", None) or "").lower()
+        citation = (chunk.citation or "").lower()
+        source_title = guess_source_title(chunk).lower()
+        section_number = str(getattr(chunk, "section_number", "") or "").strip()
 
-        score = statute_source_boost(source.title or "")
+        score = statute_source_boost(source_title)
 
         for tok in tokens:
             if tok in text:
                 score += 4
             if tok in side_note:
                 score += 6
+            if tok in part_label:
+                score += 5
+            if tok in citation:
+                score += 8
             if tok in source_title:
                 score += 8
 
@@ -129,7 +146,9 @@ def retrieve_statute_chunks(
             if "confession" in text or "confession" in side_note:
                 score += 20
 
-        if "bail" in q and ("acja" in source_title or "criminal justice" in source_title):
+        if "bail" in q and (
+            "acja" in source_title or "criminal justice" in source_title
+        ):
             score += 20
 
         if "police" in q and "police act" in source_title:
@@ -143,4 +162,4 @@ def retrieve_statute_chunks(
         return (score, -section_num)
 
     ranked = sorted(rows, key=relevance_score, reverse=True)[:limit]
-    return [row_to_result(chunk, source) for chunk, source in ranked]
+    return [row_to_result(chunk) for chunk in ranked]

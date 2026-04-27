@@ -13,7 +13,7 @@ def main():
     try:
         source = (
             db.query(LegalSource)
-            .filter(LegalSource.title == "Police Act 2020")
+            .filter(LegalChunk.citation== "Police Act 2020")
             .first()
         )
 
