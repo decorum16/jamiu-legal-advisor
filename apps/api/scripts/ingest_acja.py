@@ -55,7 +55,7 @@ def main():
             seen.add(fingerprint)
 
             db_chunk = LegalChunk(
-                source_id=source.id,
+                =source.id,
                 part_label=chunk.part_label,
                 section_number=chunk.section_number,
                 side_note=chunk.side_note,

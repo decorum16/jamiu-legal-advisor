@@ -15,7 +15,7 @@ def main():
 
         rows = (
             db.query(LegalChunk)
-            .filter(LegalChunk.source_id == 3, LegalChunk.section_number == section_number)
+            .filter(LegalChunk. == 3, LegalChunk.section_number == section_number)
             .order_by(LegalChunk.id.asc())
             .all()
         )

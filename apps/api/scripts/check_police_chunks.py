@@ -23,11 +23,11 @@ def main():
 
         count = (
             db.query(LegalChunk)
-            .filter(LegalChunk.source_id == source.id)
+            .filter(LegalChunk. == source.id)
             .count()
         )
 
-        print(f"Police Act source_id={source.id}, chunk_count={count}")
+        print(f"Police Act ={source.id}, chunk_count={count}")
 
     finally:
         db.close()

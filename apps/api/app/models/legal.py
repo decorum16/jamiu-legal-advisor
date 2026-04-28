@@ -19,7 +19,7 @@ class LegalChunk(Base):
     __tablename__ = "legal_chunks"
 
     id = Column(Integer, primary_key=True, index=True)
-    source_id = Column(Integer, ForeignKey("legal_sources.id"))
+     = Column(Integer, ForeignKey("legal_sources.id"))
 
     part_label = Column(String, nullable=True)
     section_number = Column(String, nullable=True)

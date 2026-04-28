@@ -14,11 +14,11 @@ def main():
     try:
         rows = (
             db.query(
-                LegalChunk.source_id,
+                LegalChunk.,
                 LegalChunk.section_number,
                 func.count(LegalChunk.id).label("count"),
             )
-            .group_by(LegalChunk.source_id, LegalChunk.section_number)
+            .group_by(LegalChunk., LegalChunk.section_number)
             .having(func.count(LegalChunk.id) > 1)
             .order_by(func.count(LegalChunk.id).desc(), LegalChunk.section_number.asc())
             .all()
@@ -26,7 +26,7 @@ def main():
 
         for row in rows[:30]:
             print(
-                f"source_id={row.source_id}, "
+                f"={row.}, "
                 f"section_number={row.section_number}, "
                 f"count={row.count}"
             )

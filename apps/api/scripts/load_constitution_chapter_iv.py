@@ -44,7 +44,7 @@ def main() -> None:
         for record in records:
             exists = (
                 db.query(LegalChunk)
-                .filter(LegalChunk.source_id == source.id)
+                .filter(LegalChunk. == source.id)
                 .filter(LegalChunk.section_number == record["section_number"])
                 .first()
             )
@@ -52,7 +52,7 @@ def main() -> None:
                 continue
 
             chunk = LegalChunk(
-                source_id=source.id,
+                =source.id,
                 part_label=record.get("part_label"),
                 section_number=record.get("section_number"),
                 side_note=record.get("side_note"),

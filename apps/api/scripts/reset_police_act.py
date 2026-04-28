@@ -23,7 +23,7 @@ def main():
 
         deleted = (
             db.query(LegalChunk)
-            .filter(LegalChunk.source_id == source.id)
+            .filter(LegalChunk. == source.id)
             .delete()
         )
 

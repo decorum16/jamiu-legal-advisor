@@ -23,7 +23,7 @@ def main():
 
         rows = (
             db.query(LegalChunk.part_label)
-            .filter(LegalChunk.source_id == source.id)
+            .filter(LegalChunk. == source.id)
             .distinct()
             .all()
         )

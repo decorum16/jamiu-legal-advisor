@@ -15,11 +15,11 @@ class LegalChunk(Base):
 
     chunk_index: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    section_label: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    part_label: Mapped[str | None] = mapped_column(String(100), nullable=True)
 
-    citation: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    section_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
 
-    topic: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    side_note: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     text: Mapped[str] = mapped_column(Text, nullable=False)
 

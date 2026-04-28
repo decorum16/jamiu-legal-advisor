@@ -8,7 +8,7 @@ class LegalSearchRequest(BaseModel):
 
 
 class LegalSearchResult(BaseModel):
-    source_id: int
+    : int
     source_title: str
     part_label: Optional[str] = None
     section_number: Optional[str] = None

@@ -24,7 +24,7 @@ def main():
         rows = (
             db.query(LegalChunk)
             .filter(
-                LegalChunk.source_id == source.id,
+                LegalChunk. == source.id,
                 LegalChunk.section_number == "3",
             )
             .order_by(LegalChunk.id.asc())

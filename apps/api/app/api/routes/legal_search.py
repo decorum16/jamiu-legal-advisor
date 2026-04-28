@@ -50,7 +50,7 @@ def search(
 
     base_query = (
         db.query(LegalChunk, LegalSource)
-        .join(LegalSource, LegalChunk.source_id == LegalSource.id)
+        .join(LegalSource, LegalChunk. == LegalSource.id)
     )
 
     if section_query:
