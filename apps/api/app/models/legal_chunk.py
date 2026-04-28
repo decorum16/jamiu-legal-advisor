@@ -6,7 +6,8 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.core.database import Base
 
 
-class OldLegalChunk(Base): __tablename__ = "legal_chunks"
+class OldLegalChunk(Base):
+    __tablename__ = "legal_chunks"
 
 id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
 
