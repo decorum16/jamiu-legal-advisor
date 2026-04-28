@@ -22,3 +22,4 @@ class LegalDocument(Base):
     )
 
     chunks = relationship("LegalChunk", back_populates="document", cascade="all, delete-orphan")
+    

@@ -1,6 +1,6 @@
 from datetime import datetime
-from sqlalchemy import Integer, String, Text, DateTime, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import Integer, String, Text, DateTime, func, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
 
@@ -9,6 +9,14 @@ class LegalChunk(Base):
     __tablename__ = "legal_chunks"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+
+    # ✅ THIS IS THE FIX
+    document_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("legal_documents.id"),
+        nullable=False,
+        index=True,
+    )
 
     chunk_index: Mapped[int] = mapped_column(Integer, nullable=True)
 
@@ -26,3 +34,6 @@ class LegalChunk(Base):
         server_default=func.now(),
         nullable=False,
     )
+
+    # ✅ relationship restored
+    document = relationship("LegalDocument", back_populates="chunks")
