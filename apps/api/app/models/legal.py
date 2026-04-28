@@ -1,30 +1,28 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from datetime import datetime
+from sqlalchemy import Integer, String, Text, DateTime, func
+from sqlalchemy.orm import Mapped, mapped_column
 
-from app.db.base import Base
-
-
-class LegalSource(Base):
-    __tablename__ = "legal_sources"
-
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, nullable=False)
-    source_type = Column(String, nullable=False)
-    jurisdiction = Column(String, default="Nigeria")
-
-    chunks = relationship("LegalChunk", back_populates="source")
+from app.core.database import Base
 
 
 class LegalChunk(Base):
     __tablename__ = "legal_chunks"
 
-    id = Column(Integer, primary_key=True, index=True)
-     = Column(Integer, ForeignKey("legal_sources.id"))
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
 
-    part_label = Column(String, nullable=True)
-    section_number = Column(String, nullable=True)
-    side_note = Column(String, nullable=True)
-    content_type = Column(String, default="main_section")
-    text = Column(Text, nullable=False)
+    chunk_index: Mapped[int] = mapped_column(Integer, nullable=True)
 
-    source = relationship("LegalSource", back_populates="chunks")
+    part_label: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    section_number: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    side_note: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    citation: Mapped[str | None] = mapped_column(String(255), nullable=True)
+
+    text: Mapped[str] = mapped_column(Text, nullable=False)
+
+    embedding: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
